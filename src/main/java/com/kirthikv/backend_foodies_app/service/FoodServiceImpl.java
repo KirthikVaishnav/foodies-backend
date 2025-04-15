@@ -105,7 +105,7 @@ public class FoodServiceImpl implements FoodService{
     private FoodEntity convertToEntity(FoodRequest request){
         return FoodEntity.builder()
                 .name(request.getName())
-                .desc(request.getDesc())
+                .description(request.getDescription())
                 .category(request.getCategory())
                 .price(request.getPrice())
                 .build();
@@ -115,7 +115,7 @@ public class FoodServiceImpl implements FoodService{
        return FoodResponse.builder()
                .id(entity.getId())
                 .name(entity.getName())
-                .desc(entity.getDesc())
+                .description(entity.getDescription())
                 .category(entity.getCategory())
                 .price(entity.getPrice())
                 .imageUrl(entity.getImageUrl())

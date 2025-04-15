@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 public class FoodResponse {
     private String name;
 
-    private String desc;
+    private String description;
 
     private double price;
 

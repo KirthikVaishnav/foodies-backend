@@ -21,7 +21,7 @@ public class FoodEntity {
     private String name;
 
     @Column(name = "description")
-    private String desc;
+    private String description;
 
     private double price;
 
