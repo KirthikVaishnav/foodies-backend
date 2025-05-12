@@ -102,6 +102,37 @@ public class FoodServiceImpl implements FoodService{
         }
     }
 
+    @Override
+    public FoodResponse updateFood(String id, FoodRequest request, MultipartFile file) {
+        FoodEntity existingFood = foodRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food not found with ID: " + id));
+
+        // Update basic fields
+        existingFood.setName(request.getName());
+        existingFood.setDescription(request.getDescription());
+        existingFood.setCategory(request.getCategory());
+        existingFood.setPrice(request.getPrice());
+
+        // Handle optional image update
+        if (file != null && !file.isEmpty()) {
+            // Delete the old image from S3
+            String oldImageUrl = existingFood.getImageUrl();
+            if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+                String fileName = oldImageUrl.substring(oldImageUrl.lastIndexOf("/") + 1);
+                deleteFile(fileName);
+            }
+
+            // Upload new image to S3
+            String newImageUrl = uploadFile(file);
+            existingFood.setImageUrl(newImageUrl);
+        }
+
+        // Save updated entity
+        FoodEntity updated = foodRepository.save(existingFood);
+        return convertToResponse(updated);
+    }
+
+
     private FoodEntity convertToEntity(FoodRequest request){
         return FoodEntity.builder()
                 .name(request.getName())

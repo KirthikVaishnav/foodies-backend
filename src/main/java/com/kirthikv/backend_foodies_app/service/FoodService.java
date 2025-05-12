@@ -19,4 +19,7 @@ public interface FoodService {
    boolean deleteFile(String fileName);
 
    void deleteFood(String id);
+
+   FoodResponse updateFood(String id, FoodRequest request, MultipartFile file);
+
 }

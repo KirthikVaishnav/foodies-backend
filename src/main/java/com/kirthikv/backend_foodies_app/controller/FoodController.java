@@ -2,6 +2,7 @@ package com.kirthikv.backend_foodies_app.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kirthikv.backend_foodies_app.entity.FoodEntity;
 import com.kirthikv.backend_foodies_app.ioobject.FoodRequest;
 import com.kirthikv.backend_foodies_app.ioobject.FoodResponse;
 import com.kirthikv.backend_foodies_app.service.FoodService;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/foods")
 @AllArgsConstructor
-
+@CrossOrigin("http://localhost:3001")
 public class FoodController {
 
     private static final Logger logger = LoggerFactory.getLogger(FoodController.class);
@@ -68,4 +69,23 @@ public class FoodController {
     public void deleteFood(@PathVariable String id){
         foodService.deleteFood(id);
     }
+
+    @PutMapping("/{id}")
+    public FoodResponse updateFood(@PathVariable String id,
+                                   @RequestPart("food") String foodString,
+                                   @RequestPart(value = "file", required = false) MultipartFile file) {
+        logger.info("Received update request for food ID: {}. Food JSON: {}", id, foodString);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        FoodRequest request;
+        try {
+            request = objectMapper.readValue(foodString, FoodRequest.class);
+        } catch (JsonProcessingException e) {
+            logger.error("Error parsing food JSON: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format");
+        }
+
+        return foodService.updateFood(id, request, file);
+    }
+
 }
