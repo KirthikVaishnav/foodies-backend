@@ -22,7 +22,30 @@ public class UserServiceImpl implements UserService{
         newUser = userRepository.save(newUser);
         return convertToResponse(newUser);
     }
-    
+
+    @Override
+    public String findById(String id) {
+        String loggedInUserEmail = authenticationFacade.getAuthentication().getName();
+        UserEntity loggedInUser = userRepository.findByEmail(loggedInUserEmail).orElseThrow(()->new UsernameNotFoundException("User Not Found"));
+        return loggedInUser.getId();
+    }
+
+    @Override
+    public String getCurrentUserId() {
+        String loggedInUserEmail = authenticationFacade.getAuthentication().getName();
+        UserEntity loggedInUser = userRepository.findByEmail(loggedInUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+        return loggedInUser.getId();
+    }
+
+    @Override
+    public UserEntity getCurrentUser() {
+        String loggedInUserEmail = authenticationFacade.getAuthentication().getName();
+        return userRepository.findByEmail(loggedInUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+    }
+
+
 
     private UserEntity  convertToEntity(UserRequest request){
           return UserEntity.builder()
