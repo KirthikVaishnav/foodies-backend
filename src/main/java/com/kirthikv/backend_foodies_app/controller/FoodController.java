@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/foods")
 @AllArgsConstructor
-@CrossOrigin("http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
 public class FoodController {
 
     private static final Logger logger = LoggerFactory.getLogger(FoodController.class);
